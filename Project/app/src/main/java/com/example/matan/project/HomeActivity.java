@@ -2,11 +2,8 @@ package com.example.matan.project;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -24,7 +21,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,11 +49,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     List<HashMap<String, String>> listItems;
 
     DatabaseReference databaseReference;
-    DatabaseReference getData;
     String Email;
-    int p;
+    int pos;
     int s;
-    VideoView videoView;
 
 
 
@@ -81,7 +75,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Home");
 
-
+        //Swipe to refresh//
         swipeRefreshLayout =findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.Blue));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -102,7 +96,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         buttons = (NavigationView) findViewById(R.id.navigation) ;
         buttons.setNavigationItemSelectedListener(this);
 
-        //Listview + Adapter//
+        //ListView + Adapter//
         listView = (ListView) findViewById(R.id.list);
         final SimpleAdapter adapter = new SimpleAdapter(this, listItems, R.layout.item_list,
                 new String[]{"First Line", "Second Line", "Third Line"},
@@ -125,11 +119,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        //Open dialog on longclick - Cancel, Update, Delete//
+        //Open dialog on LongClick - Cancel, Update, Delete//
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                p = position;
+                pos = position;
 
                 final AlertDialog.Builder mBuilder = new AlertDialog.Builder(HomeActivity.this, R.style.RoundDialog);
                 View mView = getLayoutInflater().inflate(R.layout.layout_dialog_delete_edit, null);
@@ -140,8 +134,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
                 editText_website_name = (EditText) mView.findViewById(R.id.website_name);
                 editText_website_url = (EditText) mView.findViewById(R.id.website_url);
-                editText_website_name.setText(listItems.get(p).get("First Line"));
-                editText_website_url.setText(listItems.get(p).get("Second Line"));
+                editText_website_name.setText(listItems.get(pos).get("First Line"));
+                editText_website_url.setText(listItems.get(pos).get("Second Line"));
 
                 button_cancel = (Button) mView.findViewById(R.id.cancel_button);
                 button_cancel.setOnClickListener(new View.OnClickListener() {
@@ -155,23 +149,18 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 button_update.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        s = p;
-                        String NameOfUpdateSite = listItems.get(p).get("First Line");
+                        s = pos;
+                        String NameOfUpdateSite = listItems.get(pos).get("First Line");
 
                         DatabaseReference dr2 = FirebaseDatabase.getInstance().getReference(Email+"/"+NameOfUpdateSite);
                         dr2.removeValue();
-                        listItems.remove(p);
+                        listItems.remove(pos);
 
                         DatabaseReference dr = FirebaseDatabase.getInstance().getReference(Email+"/"+editText_website_name.getText().toString());
                         Website website = new Website(editText_website_name.getText().toString(),editText_website_url.getText().toString(), System.currentTimeMillis());
                         dr.setValue(website);
 
-//                        HashMap<String, String> test = new HashMap<String, String>();
-//                        test.put("First Line",editText_website_name.getText().toString());
-//                        test.put("Second Line",editText_website_url.getText().toString());
-//                        listItems.set(s,test);
-//                        dialog_delete_edit.dismiss();
-//                        listView.invalidateViews();
+
                         dialog_delete_edit.dismiss();
                         listItems.clear();
                         onStart();
@@ -183,10 +172,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 button_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String NameOfDeleteSite = listItems.get(p).get("First Line");
+                        String NameOfDeleteSite = listItems.get(pos).get("First Line");
                         DatabaseReference dr = FirebaseDatabase.getInstance().getReference(Email+"/"+NameOfDeleteSite);
                         dr.removeValue();
-                        listItems.remove(p);
+                        listItems.remove(pos);
                         adapter.notifyDataSetChanged();
                         dialog_delete_edit.dismiss();
                     }
@@ -197,14 +186,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    //Get all websites from Firebase database on start activity and show them//
+    //Get all websites from FireBase database on start activity and show them//
     @Override
     protected void onStart() {
         super.onStart();
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 for(DataSnapshot websiteSnapshot : dataSnapshot.getChildren())
                 {
                     Website website = websiteSnapshot.getValue(Website.class);
@@ -218,7 +206,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     Load_websites.put("Third Line", TimeAgo.getTimeAgo(time));
                     listItems.add(Load_websites);
                 }
-
+                
                 listView.invalidateViews();
             }
 
@@ -341,16 +329,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         return super.onCreateOptionsMenu(menu);
     }
 
-    //Method that add the website to Firebase database//
+    //Method that add the website to FireBase database//
     public void addWebsite(){
         String Name = editText_website_name.getText().toString();
-
-        String id = databaseReference.push().getKey();
         Website website = new Website(editText_website_name.getText().toString(), editText_website_url.getText().toString(), System.currentTimeMillis());
         databaseReference.child(Name).setValue(website);
     }
-
-
 
     @Override
     public void onClick(View v) {
@@ -361,14 +345,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         if(menuItem.getItemId() == R.id.logout)
         {
-
             final AlertDialog.Builder mBuilder = new AlertDialog.Builder(HomeActivity.this, R.style.RoundDialog);
             View mView = getLayoutInflater().inflate(R.layout.layout_dialog_logout, null);
 
             mBuilder.setView(mView);
             final AlertDialog dialog_logout = mBuilder.create();
             dialog_logout.show();
-
 
             button_logout_no = (Button) mView.findViewById(R.id.no_button);
             button_logout_no.setOnClickListener(new View.OnClickListener() {
@@ -387,8 +369,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     SharedPreferences.Editor editor = pref.edit();
                     editor.remove("IsCheck");
                     editor.commit();
-
-
 
                     Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
                     intent.putExtra("LastActivity","HomeActivity");
@@ -428,7 +408,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    //Show exit dialog on backpress//
+    //Show exit dialog OnBackPress//
     @Override
     public void onBackPressed(){
         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(HomeActivity.this, R.style.RoundDialog);
@@ -455,7 +435,5 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-
-
 
 }

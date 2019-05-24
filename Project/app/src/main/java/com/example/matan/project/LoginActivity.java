@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -43,11 +42,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         button_login.setOnClickListener(this);
         button_register = (Button) findViewById(R.id.register_button);
         button_register.setOnClickListener(this);
-
-
-
-
-
     }
 
     public void HideKeyboard(View view)

@@ -34,7 +34,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         confrimpassword = (EditText) findViewById(R.id.edittext_confrimpassword);
         register_button = (Button) findViewById(R.id.button_register);
         register_button.setOnClickListener(this);
-
         login_button = (Button) findViewById(R.id.login_button);
         login_button.setOnClickListener(this);
     }
@@ -75,8 +74,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
             intent.putExtra("LastActivity","RegisterActivity");
             startActivity(intent);
-
-
         }
     }
 }

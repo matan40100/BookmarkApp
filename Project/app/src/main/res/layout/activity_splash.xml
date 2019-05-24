@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@color/Blue"
     android:layoutDirection="ltr"
     tools:context=".SplashActivity">
 
@@ -17,8 +17,8 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.333"
-        app:srcCompat="@drawable/m" />
+        app:layout_constraintVertical_bias="0.250"
+        app:srcCompat="@drawable/bookmark_icon" />
 
     <TextView
         android:id="@+id/textView_splash"
