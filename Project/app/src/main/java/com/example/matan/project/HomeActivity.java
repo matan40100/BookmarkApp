@@ -44,6 +44,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     ListView listView ;
     SwipeRefreshLayout swipeRefreshLayout;
 
+
     Button button_add, button_cancel, button_delete, button_update, button_logout_no, button_logout_yes;
     ImageButton button_share;
     EditText editText_website_name, editText_website_url;
@@ -101,7 +102,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        listItems.clear();
                         onStart();
                         swipeRefreshLayout.setRefreshing(false);
                     }
@@ -220,6 +220,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                listItems.clear();
+
                 for(DataSnapshot websiteSnapshot : dataSnapshot.getChildren())
                 {
                     Website website = websiteSnapshot.getValue(Website.class);
@@ -318,24 +321,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             dialog_add.show();
         }
 
-        if(item.getItemId() == R.id.refresh_button)
-        {
-                listItems.clear();
-                item.setEnabled(false);
-                Timer buttonTimer = new Timer();
-                buttonTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                item.setEnabled(true);
-                            }
-                        });
-                    }
-                }, 1000);
-                onStart();
-            }
+        if(item.getItemId() == R.id.refresh_button) {
+            item.setEnabled(false);
+            new Handler().postDelayed(new Runnable(){
+                @Override
+                public void run() {
+                    onStart();
+                    item.setEnabled(true);
+                }
+            }, 500);
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -349,7 +344,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     //Method that add the website to FireBase database//
     public void addWebsite(){
         String Name = editText_website_name.getText().toString();
-        Website website = new Website(editText_website_name.getText().toString(), editText_website_url.getText().toString(), System.currentTimeMillis());
+        Website website = new Website(editText_website_name.getText().toString(), editText_website_url.getText().toString().toLowerCase(), System.currentTimeMillis());
         databaseReference.child(Name).setValue(website);
     }
 
@@ -421,6 +416,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
             startActivity(Intent.createChooser(sharingIntent, "Share via"));
         }
+        menuItem.setCheckable(false);
         return true;
     }
 
