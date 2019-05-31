@@ -13,10 +13,10 @@
         android:layout_height="75dp"
         android:src="@drawable/m"/>
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/name_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Matan Gilad"
+        android:text="Name"
         android:textColor="@color/White"
         android:textStyle="bold"
         android:layout_marginTop="6dp"/>
@@ -25,7 +25,7 @@
         android:id="@+id/email_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="matan@gmail.com"
+        android:text="Email"
         android:textColor="@color/White"
         android:textStyle="bold" />
 

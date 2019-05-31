@@ -4,17 +4,32 @@
     android:layoutDirection="ltr"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:text="Edit Website"
-        android:textSize="25dp"
-        android:gravity="center"
-        android:textColor="@color/White"
-        android:textStyle="bold"
-        android:scaleType="center"
-        android:background="@color/Blue"
-        android:contentDescription="@string/app_name" />
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="Edit Website"
+            android:textSize="25dp"
+            android:gravity="center"
+            android:textColor="@color/White"
+            android:textStyle="bold"
+            android:scaleType="center"
+            android:background="@color/Blue"
+            android:contentDescription="@string/app_name" />
+
+        <ImageButton
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/share_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:src="@drawable/share_icon" />
+    </RelativeLayout>
+
     <EditText
         android:id="@+id/website_name"
         android:layout_width="match_parent"
@@ -39,15 +54,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-
-
+        android:orientation="horizontal">
         <Button
             android:id="@+id/cancel_button"
             android:layout_width="match_parent"
@@ -76,19 +83,6 @@
             android:textAllCaps="false"
             android:background="#F12828"
             android:text="Delete" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/share_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="16dp"
-            android:textAllCaps="false"
-            android:background="#FFFFFF"
-            android:text="Share" />
-
-
     </LinearLayout>
 
 

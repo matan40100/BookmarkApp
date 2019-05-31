@@ -19,17 +19,17 @@ public class TimeAgo {
 
         final long diff = now - time;
         if (diff < MINUTE_MILLIS) {
-            return "just now";
+            return "Just now";
         } else if (diff < 2 * MINUTE_MILLIS) {
-            return "a min ago";
+            return "A min ago";
         } else if (diff < 50 * MINUTE_MILLIS) {
-            return diff / MINUTE_MILLIS + " min ago";
+            return diff / MINUTE_MILLIS + " Min ago";
         } else if (diff < 90 * MINUTE_MILLIS) {
-            return "an hour ago";
+            return "An hour ago";
         } else if (diff < 24 * HOUR_MILLIS) {
-            return diff / HOUR_MILLIS + " hours ago";
+            return diff / HOUR_MILLIS + " Hours ago";
         } else if (diff < 48 * HOUR_MILLIS) {
-            return "yesterday";
+            return "Yesterday";
         } else {
             return diff / DAY_MILLIS + " days ago";
         }

@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -37,37 +38,46 @@ import java.util.TimerTask;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
-    NavigationView buttons,navigationView;
+    NavigationView navigationView;
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
     ListView listView ;
     SwipeRefreshLayout swipeRefreshLayout;
 
-    Button button_add, button_cancel, button_delete, button_update, button_logout_no, button_logout_yes, button_close, button_share;;
+    Button button_add, button_cancel, button_delete, button_update, button_logout_no, button_logout_yes;
+    ImageButton button_share;
     EditText editText_website_name, editText_website_url;
+    TextView header_name, header_email;
 
     List<HashMap<String, String>> listItems;
 
     DatabaseReference databaseReference;
-    String Email;
-    int pos;
-    int s;
+    String intent_email,Email;
+    int pos, indexof;
+    View header_name_email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        //Get the Email from another activity//
+        intent_email = getIntent().getStringExtra("EMAIL");
+        Email = intent_email.replace('.', '_');
 
 
-        Email = getIntent().getStringExtra("EMAIL");
-        Email = Email.replace('.', '_');
-
+        //Make button of NavigationView work//
         navigationView = (NavigationView) findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(this);
-        View header = navigationView.getHeaderView(0);
-        TextView username = (TextView) header.findViewById(R.id.name);
-        username.setText(Email);
+
+        //Change the details of the name and email in the drawer//
+        header_name_email = navigationView.getHeaderView(0);
+        header_name = (TextView) header_name_email.findViewById(R.id.name_header);
+        indexof = intent_email.indexOf('@');
+        header_name.setText(intent_email.substring(0,indexof));
+        header_email = (TextView) header_name_email.findViewById(R.id.email_header);
+        header_email.setText(intent_email);
+
 
         databaseReference = FirebaseDatabase.getInstance().getReference(Email);
 
@@ -80,8 +90,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Home");
-
-
 
         //Swipe to refresh//
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
@@ -102,16 +110,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         });
 
 
-
-
         //ListView + Adapter//
         listView = (ListView) findViewById(R.id.list);
         final SimpleAdapter adapter = new SimpleAdapter(this, listItems, R.layout.item_list,
                 new String[]{"First Line", "Second Line", "Third Line"},
                 new int[]{R.id.website_name, R.id.website_url, R.id.website_time});
         listView.setAdapter(adapter);
-
-
 
 
         //Intent to WebsiteActivity with the url and Email//
@@ -127,7 +131,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        //Open dialog on LongClick - Cancel, Update, Delete//
+        //Open dialog on LongClick - Cancel, Update, Delete, Share//
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -157,7 +161,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 button_update.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        s = pos;
+
                         String NameOfUpdateSite = listItems.get(pos).get("First Line");
 
                         DatabaseReference dr2 = FirebaseDatabase.getInstance().getReference(Email+"/"+NameOfUpdateSite);
@@ -167,7 +171,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         DatabaseReference dr = FirebaseDatabase.getInstance().getReference(Email+"/"+editText_website_name.getText().toString());
                         Website website = new Website(editText_website_name.getText().toString(),editText_website_url.getText().toString(), System.currentTimeMillis());
                         dr.setValue(website);
-
 
                         dialog_delete_edit.dismiss();
                         listItems.clear();
@@ -189,7 +192,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
 
-                button_share =(Button) mView.findViewById(R.id.share_button);
+                button_share =(ImageButton) mView.findViewById(R.id.share_button);
                 button_share.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -200,6 +203,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Website: "+app + "\n" +"URL: " + url);
                         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Website info"); //Email only
                         startActivity(Intent.createChooser(sharingIntent, "Share via"));
+
+
                     }
                 });
                 return true;
@@ -228,7 +233,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     Load_websites.put("Third Line", TimeAgo.getTimeAgo(time));
                     listItems.add(Load_websites);
                 }
-                
                 listView.invalidateViews();
             }
 
@@ -316,32 +320,23 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         if(item.getItemId() == R.id.refresh_button)
         {
-            if(!swipeRefreshLayout.isRefreshing())
-            {
                 listItems.clear();
-
-
                 item.setEnabled(false);
-
                 Timer buttonTimer = new Timer();
                 buttonTimer.schedule(new TimerTask() {
-
                     @Override
                     public void run() {
                         runOnUiThread(new Runnable() {
-
                             @Override
                             public void run() {
                                 item.setEnabled(true);
                             }
                         });
                     }
-                }, 500);
-
+                }, 1000);
                 onStart();
             }
 
-        }
         return super.onOptionsItemSelected(item);
     }
 
