@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +28,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,13 +37,13 @@ import java.util.TimerTask;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
-    NavigationView buttons;
+    NavigationView buttons,navigationView;
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
     ListView listView ;
     SwipeRefreshLayout swipeRefreshLayout;
 
-    Button button_add, button_cancel, button_delete, button_update, button_logout_no, button_logout_yes, button_close;
+    Button button_add, button_cancel, button_delete, button_update, button_logout_no, button_logout_yes, button_close, button_share;;
     EditText editText_website_name, editText_website_url;
 
     List<HashMap<String, String>> listItems;
@@ -53,15 +53,21 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     int pos;
     int s;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
+
         Email = getIntent().getStringExtra("EMAIL");
         Email = Email.replace('.', '_');
+
+        navigationView = (NavigationView) findViewById(R.id.navigation);
+        navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+        TextView username = (TextView) header.findViewById(R.id.name);
+        username.setText(Email);
 
         databaseReference = FirebaseDatabase.getInstance().getReference(Email);
 
@@ -75,8 +81,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Home");
 
+
+
         //Swipe to refresh//
-        swipeRefreshLayout =findViewById(R.id.swiperefresh);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.Blue));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -93,8 +101,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        buttons = (NavigationView) findViewById(R.id.navigation) ;
-        buttons.setNavigationItemSelectedListener(this);
+
+
 
         //ListView + Adapter//
         listView = (ListView) findViewById(R.id.list);
@@ -178,6 +186,20 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         listItems.remove(pos);
                         adapter.notifyDataSetChanged();
                         dialog_delete_edit.dismiss();
+                    }
+                });
+
+                button_share =(Button) mView.findViewById(R.id.share_button);
+                button_share.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                        sharingIntent.setType("text/plain");
+                        String app = listItems.get(pos).get("First Line");
+                        String url = listItems.get(pos).get("Second Line");
+                        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Website: "+app + "\n" +"URL: " + url);
+                        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Website info"); //Email only
+                        startActivity(Intent.createChooser(sharingIntent, "Share via"));
                     }
                 });
                 return true;
@@ -400,7 +422,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
             String shareBody = "Download my bookmark app";
-//            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download my app"); //Email only
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
             startActivity(Intent.createChooser(sharingIntent, "Share via"));
         }

@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layoutDirection="ltr"
     android:layout_width="match_parent"
@@ -38,7 +39,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
 
         <Button
             android:id="@+id/cancel_button"
@@ -68,6 +76,19 @@
             android:textAllCaps="false"
             android:background="#F12828"
             android:text="Delete" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/share_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16dp"
+            android:textAllCaps="false"
+            android:background="#FFFFFF"
+            android:text="Share" />
+
+
     </LinearLayout>
 
 
