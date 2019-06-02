@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PageOne</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
+      @import url("https://fonts.googleapis.com/css?family=Varela+Round");
+      body {
+        margin: 0px;
+        padding: 0px;
+        font-family: "Varela Round", sans-serif;
+        direction: rtl;
+        text-align: center;
+      }
+      .header {
+        background-color: #039be6;
+        width: 100%;
+        height: 50px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        text-align: center;
+      }
+      #header-name {
+        color: #ffffff;
+        font-size: 30px;
+        line-height: 50px;
+      }
+      .bookmarkapp {
+        font-size: 30px;
+        font-weight: bold;
+        color: #ff9f00;
+        margin: 10px;
+      }
+      .title {
+        font-size: 24px;
+        font-weight: bold;
+        margin: 20px;
+      }
+      .desc {
+        font-size: 16px;
+      }
+      button {
+        background-color: #ff9f00;
+        border: none;
+        font-family: "Varela Round", sans-serif;
+        color: white;
+        border-radius: 10px;
+        padding: 14px 40px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin-top: 20px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div id="header-name">PageOne</div>
+    </div>
+
+    <div>
+      <p class="bookmarkapp">Bookmark App</p>
+      <p class="title">הסבר על האפליקציה:</p>
+      <p class="desc">
+        האפליקציה שלי היא אפלקציה של מועדפים לאתרים. ניתן להרשם לאפליקציה
+        ולהוסיף אתרים תחת אותו משתמש שמחובר וניתן לגשת לאתרים שנוספו למשתמש מכל
+        מכשיר אנדרואיד אם מתחברים לאותו משתמש. אני שומר את כל הנתונים על האתרים
+        ב-DataBase של Firebase וכך יכול לטעון את הנתונים על האתרים מכל מכשיר
+        אנדרואיד.
+      </p>
+      <p class="title">סרטון הסבר על האפליקציה:</p>
+      <video width="380px" controls>
+        <source
+          src="https://firebasestorage.googleapis.com/v0/b/project-e6025.appspot.com/o/Video.mp4?alt=media&token=e82802f0-e24c-434e-a199-bd033ed7f9cb"
+          type="video/mp4"
+        />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <button
+      onclick="window.location.href='PageTwo.html'"
+      target="_self"
+      type="button"
+    >
+      הבא
+    </button>
+  </body>
+</html>

@@ -17,7 +17,7 @@ public class HtmlActivity extends AppCompatActivity {
 
         webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("file:///android_asset/page_1.html");
+        webView.loadUrl("file:///android_asset/PageOne.html");
         webView.setWebViewClient(new WebViewClient());
     }
 
