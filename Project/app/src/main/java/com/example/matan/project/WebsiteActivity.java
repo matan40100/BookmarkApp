@@ -41,7 +41,6 @@ public class WebsiteActivity extends AppCompatActivity {
             webview.goBack();
         } else {
             Intent intent = new Intent(WebsiteActivity.this, HomeActivity.class);
-            intent.putExtra("EMAIL" ,getIntent().getStringExtra("EMAIL"));
             startActivity(intent);
             finish();
             super.onBackPressed();

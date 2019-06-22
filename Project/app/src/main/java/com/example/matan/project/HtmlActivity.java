@@ -24,7 +24,6 @@ public class HtmlActivity extends AppCompatActivity {
     @Override
     public void onBackPressed(){
             Intent intent = new Intent(HtmlActivity.this, HomeActivity.class);
-            intent.putExtra("EMAIL" ,getIntent().getStringExtra("EMAIL"));
             startActivity(intent);
             finish();
             super.onBackPressed();

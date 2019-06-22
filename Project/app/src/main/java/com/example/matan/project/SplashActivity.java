@@ -9,7 +9,6 @@ import android.os.Bundle;
 public class SplashActivity extends AppCompatActivity {
 
     private final int SPLASH_DISPLAY_LENGTH = 3000;
-    String data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +23,9 @@ public class SplashActivity extends AppCompatActivity {
 
                 SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPrefsFile", MODE_PRIVATE);
                 boolean result =pref.getBoolean("IsCheck", false);
-                data = pref.getString("Email", null);
 
                 if(result) {
                     Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                    intent.putExtra("EMAIL",data);
                     startActivity(intent);
                     finish();
                 }

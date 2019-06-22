@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,9 +61,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        //Get the Email from another activity//
-        intent_email = getIntent().getStringExtra("EMAIL");
-        Email = intent_email.replace('.', '_');
+        //Get the Email from SharedPreferences//
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPrefsFile", MODE_PRIVATE);
+        intent_email = pref.getString("Email", null);
+        Email = intent_email.replace('.', '_').toLowerCase();
+
 
 
         //Make button of NavigationView work//
@@ -73,9 +76,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         header_name_email = navigationView.getHeaderView(0);
         header_name = (TextView) header_name_email.findViewById(R.id.name_header);
         indexof = intent_email.indexOf('@');
-        header_name.setText(intent_email.substring(0,indexof));
+        header_name.setText(intent_email.substring(0,indexof).toLowerCase());
         header_email = (TextView) header_name_email.findViewById(R.id.email_header);
-        header_email.setText(intent_email);
+        header_email.setText(intent_email.toLowerCase());
 
 
         databaseReference = FirebaseDatabase.getInstance().getReference(Email);
@@ -123,7 +126,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
                 Intent intent = new Intent(HomeActivity.this, WebsiteActivity.class);
                 intent.putExtra("URL",listItems.get(position).get("Second Line"));
-                intent.putExtra("EMAIL",Email);
                 startActivity(intent);
                 finish();
             }
@@ -378,6 +380,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     final SharedPreferences pref = getSharedPreferences("MyPrefsFile", MODE_PRIVATE);
                     SharedPreferences.Editor editor = pref.edit();
                     editor.remove("IsCheck");
+                    editor.remove("Email");
                     editor.commit();
 
                     Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
@@ -392,7 +395,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         if(menuItem.getItemId() == R.id.about)
         {
             Intent intent = new Intent(HomeActivity.this, AboutActivity.class);
-            intent.putExtra("EMAIL",Email);
             startActivity(intent);
             finish();
         }
@@ -400,7 +402,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         if(menuItem.getItemId() == R.id.html)
         {
             Intent intent = new Intent(HomeActivity.this, HtmlActivity.class);
-            intent.putExtra("EMAIL",Email);
             startActivity(intent);
             finish();
         }

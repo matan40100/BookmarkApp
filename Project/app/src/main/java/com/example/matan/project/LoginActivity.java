@@ -21,6 +21,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Button button_login;
     Button button_forgot;
     Button button_register;
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         button_login.setOnClickListener(this);
         button_register = (Button) findViewById(R.id.register_button);
         button_register.setOnClickListener(this);
+
+        pref = getApplicationContext().getSharedPreferences("MyPrefsFile", MODE_PRIVATE);
+        editor = pref.edit();
     }
 
     public void HideKeyboard(View view)
@@ -58,20 +63,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             {
                 if(checkBox.isChecked())
                 {
-                    SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPrefsFile", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = pref.edit();
+
                     editor.putBoolean("IsCheck", true);
                     editor.putString("Email" , editText_email.getText().toString());
                     editor.commit();
 
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                    intent.putExtra("EMAIL",editText_email.getText().toString());
                     startActivity(intent);
                     finishAffinity();
                 }
                 else {
+                    editor.putString("Email" , editText_email.getText().toString());
+                    editor.commit();
+
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                    intent.putExtra("EMAIL",editText_email.getText().toString());
                     startActivity(intent);
                     finishAffinity();
                 }

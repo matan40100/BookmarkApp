@@ -2,6 +2,7 @@ package com.example.matan.project;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +20,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     EditText confrimpassword;
     Button register_button;
     Button login_button;
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         register_button.setOnClickListener(this);
         login_button = (Button) findViewById(R.id.login_button);
         login_button.setOnClickListener(this);
+
+        pref = getApplicationContext().getSharedPreferences("MyPrefsFile", MODE_PRIVATE);
+        editor = pref.edit();
     }
 
 
@@ -50,8 +56,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         if (v == register_button) {
             if (password.getText().toString().equals(confrimpassword.getText().toString()) && android.util.Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches() && password.length() >= 6 && confrimpassword.length() >= 6) {
+                editor.putString("Email" , email.getText().toString());
+                editor.commit();
+
                 Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
-                intent.putExtra("EMAIL",email.getText().toString());
                 startActivity(intent);
                 finish();
             } else {
