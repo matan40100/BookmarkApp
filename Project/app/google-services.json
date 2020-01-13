@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "716782335469",
+    "firebase_url": "https://project-e6025.firebaseio.com",
+    "project_id": "project-e6025",
+    "storage_bucket": "project-e6025.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716782335469:android:6207eb49ec38bbc8",
+        "android_client_info": {
+          "package_name": "com.example.matan.project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "716782335469-h93p644mkddqsp2f7j96fk8fls49ulqh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.matan.project",
+            "certificate_hash": "506d377e7e384de7c7eeb04766f48ae98ff5413e"
+          }
+        },
+        {
+          "client_id": "716782335469-ird5fbqki92a3sn42boea8l91r7l7h5u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.matan.project",
+            "certificate_hash": "3a10b745313a290dc30d29ec19383b3d575d6849"
+          }
+        },
+        {
+          "client_id": "716782335469-hb11c0l1kgdftf42gui78tjduaf4b8ia.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCPxBxahjRpR4qNj7HkkiAt_zmjcFDo7M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "716782335469-hb11c0l1kgdftf42gui78tjduaf4b8ia.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

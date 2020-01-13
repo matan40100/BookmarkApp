@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +14,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     CheckBox checkBox;
@@ -24,10 +32,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     SharedPreferences pref;
     SharedPreferences.Editor editor;
 
+    private FirebaseAuth mAuth;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mAuth = FirebaseAuth.getInstance();
 
         Toolbar header = (Toolbar) findViewById(R.id.header);
         TextView mTitle = (TextView) header.findViewById(R.id.toolbar_title);
@@ -59,27 +72,44 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         if(v == button_login)
         {
+
             if(android.util.Patterns.EMAIL_ADDRESS.matcher(editText_email.getText().toString()).matches() && editText_password.length() >6)
             {
-                if(checkBox.isChecked())
-                {
+                mAuth.signInWithEmailAndPassword(editText_email.getText().toString(), editText_password.getText().toString())
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful())
+                                {
+                                    if(checkBox.isChecked())
+                                    {
 
-                    editor.putBoolean("IsCheck", true);
-                    editor.putString("Email" , editText_email.getText().toString());
-                    editor.commit();
+                                        editor.putBoolean("IsCheck", true);
+                                        editor.putString("Email" , editText_email.getText().toString());
+                                        editor.commit();
 
-                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                    finishAffinity();
-                }
-                else {
-                    editor.putString("Email" , editText_email.getText().toString());
-                    editor.commit();
+                                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                        startActivity(intent);
+                                        finishAffinity();
+                                    }
+                                    else {
+                                        editor.putString("Email" , editText_email.getText().toString());
+                                        editor.commit();
 
-                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                    finishAffinity();
-                }
+                                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                        startActivity(intent);
+                                        finishAffinity();
+                                    }
+
+                                } else
+                                    Toast.makeText(LoginActivity.this, "The user dont exist",
+                                            Toast.LENGTH_SHORT).show();
+
+                                }
+
+
+                        });
+
             }
         }
         if(v == button_forgot){
